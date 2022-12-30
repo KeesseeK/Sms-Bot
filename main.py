@@ -7,6 +7,7 @@ urls_response = requests.get(url)
 soup = BeautifulSoup(urls_response.text, 'html.parser')
 soup_links = soup.find_all('a', class_='property_link property-url')
 links = []
+numbers = []
 
 with open('morizon_links.csv', 'w') as morizon_links:
     writer = csv.writer(morizon_links)
@@ -14,14 +15,16 @@ with open('morizon_links.csv', 'w') as morizon_links:
         writer.writerow([soup_link['href']])
         links.append(soup_link['href'])
 
+for link in links:
+  url2 = link
+  urls_response = requests.get(url2)
+  soup = BeautifulSoup(urls_response.text, 'html.parser')
+  soup_links = soup.find_all('span', class_='phone hidden')
+  numbers.append(soup_links[0].text)
 
-
-numbers_response = requests.get(links[0])
-print(numbers_response.text)
-soup2 = BeautifulSoup(numbers_response.text, 'html.parser')
-numbers = soup2.find_all('span ', class_='phone hidden')
-
-with open('morizon_numbers.csv', 'w') as morizon_numbers:
-    writer = csv.writer(morizon_numbers)
+with open('morizon_links2.csv', 'w') as morizon_links2:
+    writer = csv.writer(morizon_links2)
     for number in numbers:
         writer.writerow([number])
+
+print(numbers)
