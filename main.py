@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
-url = 'https://www.morizon.pl/mieszkania/warszawa/praga-poludnie/?ps%5Bowner%5D%5B0%5D=4'
+url = 'https://www.morizon.pl/mieszkania/warszawa/goclaw/?ps%5Bprice_from%5D=370000&ps%5Bprice_to%5D=600000&ps%5Bowner%5D%5B0%5D=4'
 links = []
 numbers = []
 
@@ -25,10 +25,17 @@ def get_numbers(links):
       soup_links = soup.find_all('span', class_='phone hidden')
       numbers.append(soup_links[0].text)
 
-      with open('morizon_links2.csv', 'w') as morizon_links2:
-        writer = csv.writer(morizon_links2)
+      with open('numbers.csv', 'w') as numberscsv:
+        writer = csv.writer(numberscsv)
         for number in numbers:
             writer.writerow([number])
+          
+def writing_to_csv(numbers, links):
+    with open('data.csv', 'w') as d:
+      writer = csv.writer(d)
+      writer.writerows(zip(numbers,links))
+
 
 get_links(url)
 get_numbers(links)
+writing_to_csv(numbers, links)
